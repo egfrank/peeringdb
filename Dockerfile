@@ -49,21 +49,34 @@ COPY --from=builder "$VIRTUAL_ENV" "$VIRTUAL_ENV"
 RUN mkdir -p api-cache etc locale media static var/log
 COPY manage.py .
 # container exec whois
+RUN true
 COPY in.whoisd .
+RUN true
 COPY Ctl/VERSION etc
+RUN true
 COPY docs/ docs
+RUN true
 COPY mainsite/ mainsite
+RUN true
 COPY $ADD_SETTINGS_FILE mainsite/settings/
+RUN true
 COPY peeringdb_server/ peeringdb_server
+RUN true
 COPY fixtures/ fixtures
+RUN true
 COPY .coveragerc .coveragerc
+RUN true
 RUN mkdir coverage 
+RUN true
 
 COPY scripts/manage /usr/bin/
+RUN true
 COPY Ctl/docker/entrypoint.sh /
+RUN true
 
 # inetd for whois
 COPY --from=builder /usr/sbin/inetd /usr/sbin/
+RUN true
 COPY Ctl/docker/inetd.conf /etc/
 
 RUN chown -R pdb:pdb api-cache locale media var/log coverage
@@ -74,6 +87,7 @@ FROM final as tester
 WORKDIR /srv/www.peeringdb.com
 # copy from builder in case we're testing new deps
 COPY --from=builder /srv/www.peeringdb.com/Pipfile* ./
+RUN true
 COPY tests/ tests
 RUN chown -R pdb:pdb tests/
 COPY Ctl/docker/entrypoint.sh .
@@ -92,6 +106,7 @@ CMD ["runserver", "$RUNSERVER_BIND"]
 FROM final
 
 COPY Ctl/docker/entrypoint.sh .
+RUN true
 COPY Ctl/docker/django-uwsgi.ini etc/
 
 ENV UWSGI_SOCKET="127.0.0.1:7002"
